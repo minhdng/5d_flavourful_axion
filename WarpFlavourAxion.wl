@@ -143,7 +143,11 @@ Through[
 	{Re,Im}
 	[ 
 		(yD[[3,3]] yUMinor[[3,1]]-yD[[2,3]] yUMinor[[2,1]]+yD[[1,3]] yUMinor[[1,1]])/
-		(yD[[3,3]] yUMinor[[1,1]] (yD[[2,3]]/yD[[3,3]]-yU[[2,3]]/yU[[3,3]]) (yDMinor[[2,1]]/yDMinor[[1,1]]-yUMinor[[2,1]]/yUMinor[[1,1]])) 
+		(
+			yD[[3,3]] yUMinor[[1,1]] 
+			(yD[[2,3]]/yD[[3,3]]-yU[[2,3]]/yU[[3,3]]) 
+			(yDMinor[[2,1]]/yDMinor[[1,1]]-yUMinor[[2,1]]/yUMinor[[1,1]])
+		) 
 	]
 ];
 
@@ -182,17 +186,23 @@ LeptonEffMass[yN_, yE_, yNMinor_, yEMinor_, v_:246, \[Beta]_:ArcTan[3]]:= <|
 |>;
 
 
-QuarkProfileBoundedQ[yU_, yD_, yUMinor_, yDMinor_, v_:246, \[Beta]_:ArcTan[3], threshold_:0.95]:= AllTrue[ Values[QuarkEffMass[yU, yD, yUMinor, yDMinor, v, \[Beta]]], (#<threshold)& ];
+QuarkProfileBoundedQ[yU_, yD_, yUMinor_, yDMinor_, v_:246, \[Beta]_:ArcTan[3], threshold_:0.95]:= 
+	AllTrue[ Values[QuarkEffMass[yU, yD, yUMinor, yDMinor, v, \[Beta]]], (#<threshold)& ];
 
 
-LeptonProfileBoundedQ[yN_, yE_, yNMinor_, yEMinor_, v_:246, \[Beta]_:ArcTan[3], threshold_:0.95]:= AllTrue[ Values[LeptonEffMass[yN, yE, yNMinor, yEMinor, v, \[Beta]]], (#<threshold)& ];
+LeptonProfileBoundedQ[yN_, yE_, yNMinor_, yEMinor_, v_:246, \[Beta]_:ArcTan[3], threshold_:0.95]:= 
+	AllTrue[ Values[LeptonEffMass[yN, yE, yNMinor, yEMinor, v, \[Beta]]], (#<threshold)& ];
 
 
 (* Constraint 3 *)
 
 
-QuarkAMatrices[yU_, yD_, yUMinor_, yDMinor_, v_:246, \[Beta]_:ArcTan[3]]:=Module[{fQ, fu, fd, AuL, AuR, AdL, AdR, phaseU, phaseD},
-fQ = {$CkmLambda/Norm[yDMinor[[2,1]]/yDMinor[[1,1]]-yUMinor[[2,1]]/yUMinor[[1,1]]], 1, Norm[yD[[2,3]]/yD[[3,3]]-yU[[2,3]]/yU[[3,3]]]/($CkmA $CkmLambda^2)};
+QuarkAMatrices[yU_, yD_, yUMinor_, yDMinor_, v_:246, \[Beta]_:ArcTan[3]]:= Module[{fQ, fu, fd, AuL, AuR, AdL, AdR, phaseU, phaseD},
+fQ = {
+		$CkmLambda/Norm[yDMinor[[2,1]]/yDMinor[[1,1]]-yUMinor[[2,1]]/yUMinor[[1,1]]], 
+		1, 
+		Norm[yD[[2,3]]/yD[[3,3]]-yU[[2,3]]/yU[[3,3]]]/($CkmA $CkmLambda^2)
+	};
 fu = (QuarkEffMass[yU, yD, yUMinor, yDMinor, v, \[Beta]][#]&/@{"u","c","t"})/fQ;
 fd = (QuarkEffMass[yU, yD, yUMinor, yDMinor, v, \[Beta]][#]&/@{"d","s","b"})/fQ;
 phaseU = ({
@@ -206,58 +216,113 @@ phaseD = ({
  {0, 0, E^(-I Arg[yD[[3,3]]])}
 });
 AuL = ({
- {1, yUMinor[[2,1]]/yUMinor[[1,1]] fQ[[1]]/fQ[[2]], yU[[1,3]]/yU[[3,3]] fQ[[1]]/fQ[[3]]},
- {-((yUMinor[[2,1]]//Conjugate)/(yUMinor[[1,1]]//Conjugate)) fQ[[1]]/fQ[[2]], 1, yU[[2,3]]/yU[[3,3]] fQ[[2]]/fQ[[3]]},
- {(yUMinor[[3,1]]//Conjugate)/(yUMinor[[1,1]]//Conjugate) fQ[[1]]/fQ[[3]], -((yU[[2,3]]//Conjugate)/(yU[[3,3]]//Conjugate)) fQ[[2]]/fQ[[3]], 1}
+ {1, 
+ yUMinor[[2,1]]/yUMinor[[1,1]] fQ[[1]]/fQ[[2]], 
+ yU[[1,3]]/yU[[3,3]] fQ[[1]]/fQ[[3]]
+ },
+ {-((yUMinor[[2,1]]//Conjugate)/(yUMinor[[1,1]]//Conjugate)) fQ[[1]]/fQ[[2]], 
+ 1, 
+ yU[[2,3]]/yU[[3,3]] fQ[[2]]/fQ[[3]]
+ },
+ {(yUMinor[[3,1]]//Conjugate)/(yUMinor[[1,1]]//Conjugate) fQ[[1]]/fQ[[3]], 
+ -((yU[[2,3]]//Conjugate)/(yU[[3,3]]//Conjugate)) fQ[[2]]/fQ[[3]], 
+ 1}
 });
 AuR = phaseU.({
- {1, (yUMinor[[1,2]]//Conjugate)/(yUMinor[[1,1]]//Conjugate) fu[[1]]/fu[[2]], (yU[[3,1]]//Conjugate)/(yU[[3,3]]//Conjugate) fu[[1]]/fu[[3]]},
- {-(yUMinor[[1,2]]/yUMinor[[1,1]]) fu[[1]]/fu[[2]], 1, (yU[[3,2]]//Conjugate)/(yU[[3,3]]//Conjugate) fu[[2]]/fu[[3]]},
- {yUMinor[[1,3]]/yUMinor[[1,1]] fu[[1]]/fu[[3]], -(yU[[3,2]]/yU[[3,3]]) fu[[2]]/fu[[3]], 1}
+ {1, 
+ (yUMinor[[1,2]]//Conjugate)/(yUMinor[[1,1]]//Conjugate) fu[[1]]/fu[[2]], 
+ (yU[[3,1]]//Conjugate)/(yU[[3,3]]//Conjugate) fu[[1]]/fu[[3]]
+ },
+ {-(yUMinor[[1,2]]/yUMinor[[1,1]]) fu[[1]]/fu[[2]], 
+ 1, 
+ (yU[[3,2]]//Conjugate)/(yU[[3,3]]//Conjugate) fu[[2]]/fu[[3]]
+ },
+ {yUMinor[[1,3]]/yUMinor[[1,1]] fu[[1]]/fu[[3]], 
+ -(yU[[3,2]]/yU[[3,3]]) fu[[2]]/fu[[3]], 
+ 1}
 });
 AdL = ({
- {1, yDMinor[[2,1]]/yDMinor[[1,1]] fQ[[1]]/fQ[[2]], yD[[1,3]]/yD[[3,3]] fQ[[1]]/fQ[[3]]},
- {-((yDMinor[[2,1]]//Conjugate)/(yDMinor[[1,1]]//Conjugate)) fQ[[1]]/fQ[[2]], 1, yD[[2,3]]/yD[[3,3]] fQ[[2]]/fQ[[3]]},
- {(yDMinor[[3,1]]//Conjugate)/(yDMinor[[1,1]]//Conjugate) fQ[[1]]/fQ[[3]], -((yD[[2,3]]//Conjugate)/(yD[[3,3]]//Conjugate)) fQ[[2]]/fQ[[3]], 1}
+ {1, 
+ yDMinor[[2,1]]/yDMinor[[1,1]] fQ[[1]]/fQ[[2]], 
+ yD[[1,3]]/yD[[3,3]] fQ[[1]]/fQ[[3]]
+ },
+ {-((yDMinor[[2,1]]//Conjugate)/(yDMinor[[1,1]]//Conjugate)) fQ[[1]]/fQ[[2]], 
+ 1, 
+ yD[[2,3]]/yD[[3,3]] fQ[[2]]/fQ[[3]]
+ },
+ {(yDMinor[[3,1]]//Conjugate)/(yDMinor[[1,1]]//Conjugate) fQ[[1]]/fQ[[3]], 
+ -((yD[[2,3]]//Conjugate)/(yD[[3,3]]//Conjugate)) fQ[[2]]/fQ[[3]], 
+ 1}
 });
 AdR = phaseD.({
- {1, (yDMinor[[1,2]]//Conjugate)/(yDMinor[[1,1]]//Conjugate) fd[[1]]/fd[[2]], (yD[[3,1]]//Conjugate)/(yD[[3,3]]//Conjugate) fd[[1]]/fd[[3]]},
- {-(yDMinor[[1,2]]/yDMinor[[1,1]]) fd[[1]]/fd[[2]], 1, (yD[[3,2]]//Conjugate)/(yD[[3,3]]//Conjugate) fd[[2]]/fd[[3]]},
- {yDMinor[[1,3]]/yDMinor[[1,1]] fd[[1]]/fd[[3]], -(yD[[3,2]]/yD[[3,3]]) fd[[2]]/fd[[3]], 1}
+ {1, 
+ (yDMinor[[1,2]]//Conjugate)/(yDMinor[[1,1]]//Conjugate) fd[[1]]/fd[[2]], 
+ (yD[[3,1]]//Conjugate)/(yD[[3,3]]//Conjugate) fd[[1]]/fd[[3]]
+ },
+ {-(yDMinor[[1,2]]/yDMinor[[1,1]]) fd[[1]]/fd[[2]], 
+ 1, 
+ (yD[[3,2]]//Conjugate)/(yD[[3,3]]//Conjugate) fd[[2]]/fd[[3]]
+ },
+ {yDMinor[[1,3]]/yDMinor[[1,1]] fd[[1]]/fd[[3]], 
+ -(yD[[3,2]]/yD[[3,3]]) fd[[2]]/fd[[3]], 
+ 1}
 });
 {AuL, AuR, AdL, AdR}
 ];
 
 
-LeptonAMatrices[yN_, yE_, yNMinor_, yEMinor_, ordering_, v_:246, \[Beta]_:ArcTan[3]]:=Module[{fl, fe, AeL, AeR, phaseE},
-fl = {$PmnsLambda[[ordering]]/Norm[yEMinor[[2,1]]/yEMinor[[1,1]]-yNMinor[[2,1]]/yNMinor[[1,1]]], 1, Norm[yE[[2,3]]/yE[[3,3]]-yN[[2,3]]/yN[[3,3]]]/($PmnsA[[ordering]] $PmnsLambda[[ordering]]^2)};
-fe = (LeptonEffMass[yN, yE, yNMinor, yEMinor, v, \[Beta]][#]&/@{"e","mu","tau"})/fl;
+LeptonAMatrices[yN_, yE_, yNMinor_, yEMinor_, ordering_, v_:246, \[Beta]_:ArcTan[3]]:= Module[{fl, fe, AeL, AeR, phaseE},
+fl = {
+		$PmnsLambda[[ordering]]/Norm[yEMinor[[2,1]]/yEMinor[[1,1]]-yNMinor[[2,1]]/yNMinor[[1,1]]], 
+		1, 
+		Norm[yE[[2,3]]/yE[[3,3]]-yN[[2,3]]/yN[[3,3]]]/($PmnsA[[ordering]] $PmnsLambda[[ordering]]^2)
+	};
+fe = (LeptonEffMass[yN, yE, yNMinor, yEMinor, v, \[Beta]][#]&/@{"e","mu","tau"}) / fl;
 phaseE = ({
  {E^(-I(Arg[Det[yE]]-Arg[yEMinor[[1,1]]])), 0, 0},
  {0, E^(-I(Arg[yEMinor[[1,1]]]- Arg[yE[[3,3]]])), 0},
  {0, 0, E^(-I Arg[yE[[3,3]]])}
 });
 AeL = ({
- {1, yEMinor[[2,1]]/yEMinor[[1,1]] fl[[1]]/fl[[2]], yE[[1,3]]/yE[[3,3]] fl[[1]]/fl[[3]]},
- {-((yEMinor[[2,1]]//Conjugate)/(yEMinor[[1,1]]//Conjugate)) fl[[1]]/fl[[2]], 1, yE[[2,3]]/yE[[3,3]] fl[[2]]/fl[[3]]},
- {(yEMinor[[3,1]]//Conjugate)/(yEMinor[[1,1]]//Conjugate) fl[[1]]/fl[[3]], -((yE[[2,3]]//Conjugate)/(yE[[3,3]]//Conjugate)) fl[[2]]/fl[[3]], 1}
+ {1, 
+ yEMinor[[2,1]]/yEMinor[[1,1]] fl[[1]]/fl[[2]], 
+ yE[[1,3]]/yE[[3,3]] fl[[1]]/fl[[3]]
+ },
+ {-((yEMinor[[2,1]]//Conjugate)/(yEMinor[[1,1]]//Conjugate)) fl[[1]]/fl[[2]], 
+ 1, 
+ yE[[2,3]]/yE[[3,3]] fl[[2]]/fl[[3]]
+ },
+ {(yEMinor[[3,1]]//Conjugate)/(yEMinor[[1,1]]//Conjugate) fl[[1]]/fl[[3]], 
+ -((yE[[2,3]]//Conjugate)/(yE[[3,3]]//Conjugate)) fl[[2]]/fl[[3]], 
+ 1}
 });
 AeR = phaseE.({
- {1, (yEMinor[[1,2]]//Conjugate)/(yEMinor[[1,1]]//Conjugate) fe[[1]]/fe[[2]], (yE[[3,1]]//Conjugate)/(yE[[3,3]]//Conjugate) fe[[1]]/fe[[3]]},
- {-(yEMinor[[1,2]]/yEMinor[[1,1]]) fe[[1]]/fe[[2]], 1, (yE[[3,2]]//Conjugate)/(yE[[3,3]]//Conjugate) fe[[2]]/fe[[3]]},
- {yEMinor[[1,3]]/yEMinor[[1,1]] fe[[1]]/fe[[3]], -(yE[[3,2]]/yE[[3,3]]) fe[[2]]/fe[[3]], 1}
+ {1, 
+ (yEMinor[[1,2]]//Conjugate)/(yEMinor[[1,1]]//Conjugate) fe[[1]]/fe[[2]], 
+ (yE[[3,1]]//Conjugate)/(yE[[3,3]]//Conjugate) fe[[1]]/fe[[3]]
+ },
+ {-(yEMinor[[1,2]]/yEMinor[[1,1]]) fe[[1]]/fe[[2]], 
+ 1, 
+ (yE[[3,2]]//Conjugate)/(yE[[3,3]]//Conjugate) fe[[2]]/fe[[3]]
+ },
+ {yEMinor[[1,3]]/yEMinor[[1,1]] fe[[1]]/fe[[3]], 
+ -(yE[[3,2]]/yE[[3,3]]) fe[[2]]/fe[[3]], 
+ 1}
 });
 {AeL, AeR}
 ];
 
 
-UnitaryQ[mat_,thres_]:= AllTrue[ Abs[Flatten[mat.ConjugateTranspose[mat]-IdentityMatrix[3]]], (#<thres)& ] (* Different from UnitaryMatrixQ of Mathematica *)
+(* Different from UnitaryMatrixQ of Mathematica *)
+UnitaryQ[mat_,thres_]:= AllTrue[ Abs[Flatten[mat.ConjugateTranspose[mat]-IdentityMatrix[3]]], (#<thres)& ] 
 
 
-QuarkAMatricesUnitaryQ[yU_, yD_, yUMinor_, yDMinor_, v_:246, \[Beta]_:ArcTan[3], thres_:0.2]:= AllTrue[ {1,2,3,4}, UnitaryQ[QuarkAMatrices[yU,yD,yUMinor,yDMinor, v, \[Beta]][[#]], thres]& ]
+QuarkAMatricesUnitaryQ[yU_, yD_, yUMinor_, yDMinor_, v_:246, \[Beta]_:ArcTan[3], thres_:0.2]:= 
+	AllTrue[ {1,2,3,4}, UnitaryQ[QuarkAMatrices[yU,yD,yUMinor,yDMinor, v, \[Beta]][[#]], thres]& ]
 
 
-LeptonAMatricesUnitaryQ[yN_, yE_, yNMinor_, yEMinor_, ordering_, v_:246, \[Beta]_:ArcTan[3], thres_:0.2]:= AllTrue[ {1,2}, UnitaryQ[LeptonAMatrices[yN, yE, yNMinor, yEMinor, ordering, v, \[Beta]][[#]], thres]& ]
+LeptonAMatricesUnitaryQ[yN_, yE_, yNMinor_, yEMinor_, ordering_, v_:246, \[Beta]_:ArcTan[3], thres_:0.2]:= 
+	AllTrue[ {1,2}, UnitaryQ[LeptonAMatrices[yN, yE, yNMinor, yEMinor, ordering, v, \[Beta]][[#]], thres]& ]
 
 
 (* Script running through all three *)
@@ -268,10 +333,13 @@ LeptonAMatricesUnitaryQ[yN_, yE_, yNMinor_, yEMinor_, ordering_, v_:246, \[Beta]
  ****************************************************************)
 
 
-FermionProfile[c_?NumericQ, z_, zir_:10^8]:=Piecewise[{{Sqrt[(1-2c)/(zir^(1-2c) - 1)]z^(2-c),c>1/2||c<1/2},{1/Sqrt[Log[zir]],c==1/2}}]
+FermionProfile[c_?NumericQ, z_, zir_:10^8]:=
+	Piecewise[{{Sqrt[(1-2c)/(zir^(1-2c) - 1)]z^(2-c),c>1/2||c<1/2},{1/Sqrt[Log[zir]],c==1/2}}]
 
 
-FermionProfileUVOverlap[cL_?NumericQ, cR_?NumericQ, zir_:10^8]:=Module[{zuv=1.1}, FermionProfile[cL, zuv, zir] FermionProfile[cR, zuv, zir]]
+FermionProfileUVOverlap[cL_?NumericQ, cR_?NumericQ, zir_:10^8]:=Module[{zuv=1.1}, 
+	FermionProfile[cL, zuv, zir] FermionProfile[cR, zuv, zir]
+]
 
 
 FermionProfileBulkOverlap[cL_?NumericQ,cR_?NumericQ,zir_:10^8]:=
@@ -294,7 +362,9 @@ TurnLeft[listPM_]:=Module[{cM=Transpose[listPM][[1]], cP=Transpose[listPM][[2]]}
 (* fermion overlap functions in Subscript[c, P], Subscript[c, M] *)
 
 
-FermionProfileUVOverlapCM[cP_?NumericQ, cM_?NumericQ, zir_:10^8]:=Module[{zuv=1.1}, FermionProfile[(cP-cM)/2, zuv, zir] FermionProfile[(cP+cM)/2, zuv, zir]];
+FermionProfileUVOverlapCM[cP_?NumericQ, cM_?NumericQ, zir_:10^8]:= Module[{zuv=1.1}, 
+	FermionProfile[(cP-cM)/2, zuv, zir] FermionProfile[(cP+cM)/2, zuv, zir]
+];
 
 
 FermionProfileBulkOverlapCM[cP_?NumericQ, cM_?NumericQ, zir_:10^8]:=
