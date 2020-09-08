@@ -69,6 +69,7 @@ LeptonAMatrices::usage = "LeptonAMatrices[yN_, yE_, yNMinor_, yEMinor_, v_, \[Be
 UnitaryQ::usage = "UnitaryQ[mat_,thres_]";
 QuarkAMatricesUnitaryQ::usage = "QuarkAMatricesUnitaryQ[yU_,yD_,yUMinor_,yDMinor_,thres_, v_, \[Beta]_]";
 LeptonAMatricesUnitaryQ::usage = "LeptonAMatricesUnitaryQ[yN_,yE_,yNMinor_,yEMinor_,thres_, v_, \[Beta]_]";
+QuarkConstraintSummary::usage = "QuarkConstraintSummary[yU_, yD_, yUMinor_, yDMinor_]";
 
 FermionProfile::usage = "FermionProfile[c_?NumericQ, z_, zir_:10^8]";
 FermionProfileUVOverlap::usage = "FermionProfileUVOverlap[cL_?NumericQ, cR_?NumericQ, zir_:10^8]";
@@ -100,7 +101,7 @@ Begin["`Private`"];
 
 $UpMass = {0.0023, 1.275, 173.21};
 $UpMassError = {0.0012, 0.025, 1.22};
-$DownMass = {00048 , 0.095, 4.18}; 
+$DownMass = {0.0048 , 0.095, 4.18}; 
 $DownMassError = {0.0008, 0.005, 0.03};
 $LeptonMass = {0.00051099895000, 0.1056583755, 1.77686};
 $LeptonMassError = {0.00000000000015, 0.0000000023, 0.00012};
@@ -129,10 +130,10 @@ $PmnsEtaBar = {0.477, 0.488}; $PmnsEtaBarError = {0.061, 0.053};
  ****************************************************************)
 
 
-RandomMatrix[dim_] := RandomReal[{0.001, 3.0},{dim,dim}] Exp[I RandomReal[{0., 2\[Pi]},{dim,dim}]]
+RandomMatrix[dim_, min_:0.001, max_:3.] := RandomReal[{min, max},{dim, dim}] Exp[I RandomReal[{0., 2\[Pi]},{dim, dim}]]
 
 
-RandomUnitaryMatrix[dim_] := QRDecomposition[RandomMatrix[0.001, 3.0, dim]][[1]];
+RandomUnitaryMatrix[dim_, min_:0.001, max_:3.] := QRDecomposition[RandomMatrix[dim, min, max]][[1]];
 
 
 (* Constraints 1. *)
@@ -325,7 +326,29 @@ LeptonAMatricesUnitaryQ[yN_, yE_, yNMinor_, yEMinor_, ordering_, v_:246, \[Beta]
 	AllTrue[ {1,2}, UnitaryQ[LeptonAMatrices[yN, yE, yNMinor, yEMinor, ordering, v, \[Beta]][[#]], thres]& ]
 
 
-(* Script running through all three *)
+(* Script running through all three constraint *)
+
+
+QuarkConstraintSummary[yU_, yD_, yUMinor_, yDMinor_]:= Module[{AdR},
+	Print["Constraint 1 result for quark sector"];
+	Print["\!\(\*SubscriptBox[\(Y\), \(u\)]\) = ",MatrixForm[yU]];
+	Print["\!\(\*SubscriptBox[\(Y\), \(d\)]\) = ",MatrixForm[yD]];
+	Print["The resulted \[Rho]bar = ",RhoEtaBar[yU,yD,yUMinor,yDMinor][[1]], ", \[Eta]bar = ", - RhoEtaBar[yU,yD,yUMinor,yDMinor][[2]]];
+	Print["Experimental \[Rho]bar = ",$CkmRhoBar, " \[PlusMinus] ", $CkmRhoBarError,", \[Eta]bar = ",$CkmEtaBar, " \[PlusMinus] ", $CkmEtaBarError];
+	Print["CkmQ[] returns ",CkmQ[yU,yD,yUMinor,yDMinor]];
+	Print["Constraint 2 result for quark sector"];
+	Print["\!\(\*SubscriptBox[\(Y\), \(u\)]\) = ",MatrixForm[yU]];
+	Print["\!\(\*SubscriptBox[\(Y\), \(d\)]\) = ",MatrixForm[yD]];
+	Print["The resulted effective quark masses ", QuarkEffMass[yU,yD,yUMinor,yDMinor]];
+	Print["QuarkProfileBoundedQ[] returns ",QuarkProfileBoundedQ[yU,yD,yUMinor,yDMinor]];
+	Print["Constraint 3 result for quark sector"];
+	Print["\!\(\*SubscriptBox[\(Y\), \(u\)]\) = ",MatrixForm[yU]];
+	Print["\!\(\*SubscriptBox[\(Y\), \(d\)]\) = ",MatrixForm[yD]];
+	AdR = QuarkAMatrices[yU, yD, yUMinor, yDMinor][[4]];
+	Print["The resulted \!\(\*SubscriptBox[SuperscriptBox[\(A\), \(d\)], \(R\)]\) = ", MatrixForm[AdR]];
+	Print[ " with norm ", MatrixForm[AdR.ConjugateTranspose[AdR]]];
+	Print["QuarkAMatricesUnitaryQ[] returns ", QuarkAMatricesUnitaryQ[yU, yD, yUMinor, yDMinor]];
+]
 
 
 (****************************************************************
