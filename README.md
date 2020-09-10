@@ -2,12 +2,14 @@
 
 ## Package
 
-`WarpFlavourAxion` includes all constants and functions  
+`WarpFlavourAxion` includes all constants and functions.  
+
+Examples of function usages are included in `sample.nb`.
 
 ## Notebooks
 
 ### `pmns.nb`
-calculate the Wolfenstein paramters of the PMNS matrix. 
+calculates the Wolfenstein paramters of the PMNS matrix. 
 
 ### `yukawa_generator.nb` 
 randomly generates pairs of Y<sub>u</sub>, Y<sub>d</sub> (Y<sub>n</sub>, Y<sub>e</sub>) then systematically eliminates through 3 constraints: 
