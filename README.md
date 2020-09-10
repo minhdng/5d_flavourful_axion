@@ -19,5 +19,5 @@ randomly generates pairs of Y<sub>u</sub>, Y<sub>d</sub> (Y<sub>n</sub>, Y<sub>e
 
 The raw data, i.e. surviving pairs after each constraints, are saved in `data/`. The final result is saved in `output/`.
 
-### `axion_coupling.nb` 
+### `aff_offdiag_couling.nb` 
 calculates off-diagonal axion-fermion-fermion couplings and produce corresponding figures. 
