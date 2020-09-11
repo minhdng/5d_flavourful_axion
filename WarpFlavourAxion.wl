@@ -78,6 +78,7 @@ TurnRight::usage = "TurnRight[listLR_]";
 TurnLeft::usage = "TurnLeft[listPM_]";
 FermionProfileUVOverlapCM::usage = "FermionProfileUVOverlapCM[cP_?NumericQ, cM_?NumericQ, zir_:10^8]";
 FermionProfileBulkOverlapCM::usage = "FermionProfileBulkOverlapCM[cP_?NumericQ, cM_?NumericQ, zir_:10^8]";
+FermionAxionOverlap::usage = "FermionAxionOverlap[c_,\[CapitalDelta]_,zir_:10^8]";
 
 FixedRange::usage = "FixedRange[min_, max_, length_]";
 ListMirror::usage = "ListMirror[list_]";
@@ -380,6 +381,12 @@ TurnRight[listLR_]:=Module[{cL=Transpose[listLR][[1]], cR=Transpose[listLR][[2]]
 TurnLeft[listPM_]:=Module[{cM=Transpose[listPM][[1]], cP=Transpose[listPM][[2]]},
 	Transpose[{cP+cM, cP-cM}]/2
 ];
+
+
+(* Axion-fermion-fermion overlap integral (non-flat part) *)
+
+
+FermionAxionOverlap[c_,\[CapitalDelta]_,zir_:10^8]:=(1-2c)/(zir^(1-2c) - 1) 1/(4\[CapitalDelta](\[CapitalDelta]-1)) ((zir^(1-2 c)-zir^(-2 \[CapitalDelta]))/(1-2 c+2 \[CapitalDelta])+\[CapitalDelta] (1/zir^2-zir^(1-2 c))/(3-2 c));
 
 
 (* fermion overlap functions in Subscript[c, P], Subscript[c, M] *)
