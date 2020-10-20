@@ -7,7 +7,9 @@
 (* :Copyright: Copyright 2020, Minh D. Nguyen *)
 (* :Mathematica Version: 12.0 *)
 (* :History:
-  V1.0. 
+  V1.00 
+  V1.01 Include leptons
+  V1.01 Update definition for constraint 3 for PMNS
  *)
 (* :Notes:
 
@@ -29,12 +31,19 @@ BeginPackage["WarpFlavourAxion`"];
 (* Usage messages *)
 
 
+(* constants *)
 $UpMass::usage = "$UpMass return a vector of {up, charm, top} quark masses of in GeV";
 $UpMassError::usage = "$UpMassError returns uncertainty of UpMass in GeV";
 $DownMass::usage = "$DownMass[1], $DownMass[2], $DownMass[3] return masses of down, strange and bottom quark in GeV";
 $DownMassError::usage = "$DownMassError returns uncertainty of DownMass in GeV";
 $LeptonMass::usage = "$LeptonMass[1], $LeptonMass[2], $LeptonMass[3] return masses of electron, muon and tau in GeV";
 $LeptonMassError::usage = "$LeptonMassError returns uncertainty of LeptonMass in GeV";
+$Yu::usage = "$Yu returns a vector of {up, charm, top} Yukawa couplings at 10^10 GeV for tan beta = 3";
+$YuError::usage = "$YuError returns a vector of {up, charm, top} Yukawa coupling uncertainty at 10^10 GeV for tan beta = 3";
+$Yd::usage = "$Yd returns a vector of {down, strange, bottom} Yukawa couplings at 10^10 GeV for tan beta = 3";
+$YdError::usage = "$YdError returns a vector of {down, strange, bottom} Yukawa coupling uncertainty at 10^10 GeV for tan beta = 3";
+$Ye::usage = "$Ye returns a vector of {electron, mu, tau} Yukawa couplings at 10^10 GeV for tan beta = 3";
+$YeError::usage = "$YeError returns a vector of {electron, mu, tau} Yukawa coupling uncertainty at 10^10 GeV for tan beta = 3";
 $CkmLambda::usage = "0.22453"; 
 $CkmLambdaError::usage = "0.00044";
 $CkmA::usage = "0.836"; 
@@ -52,17 +61,29 @@ $PmnsRhoBarError::usage = "{0.14, 0.15}";
 $PmnsEtaBar::usage = "{0.477, 0.488}"; 
 $PmnsEtaBarError::usage = "{0.061, 0.053}";
 
+(* Utitlities *)
+
 RandomMatrix::usage = "randomMatrix[min_, max_, dim_]";
 RandomUnitaryMatrix::usage = "randomUnitaryMatrix[min_, max_, dim_]";
+
+(* Constraint 1 *)
 
 RhoEtaBar::usage = "CkmRhoEtaBar[yU_,yD_,yUMinor_,yDMinor_]";
 CkmQ::usage = "CkmQ[yU, yD, yUMinor, yDMinor]";
 PmnsQ::usage = "PmnsQ[yU_,yD_,yUMinor_,yDMinor_]";
 
+(* Constraint 2 *)
+
 QuarkEffMass::usage = "QuarkEffMass[yU_,yD_,yUMinor_,yDMinor_,v_,\[Beta]_]";
 LeptonEffMass::usage = "LeptonEffMass[yU_,yD_,yUMinor_,yDMinor_,v_,\[Beta]_]";
+
+QuarkEffYukawa::usage = "QuarkEffYukawa[yU_, yD_, yUMinor_, yDMinor_]";
+LeptonEffYukawa::usage = "LeptonEffYukawa[yN_, yE_, yNMinor_, yEMinor_]";
+
 QuarkProfileBoundedQ::usage = "QuarkProfileBoundedQ[yU_,yD_,yUMinor_,yDMinor_,v_,\[Beta]_,threshold_]";
 LeptonProfileBoundedQ::usage = "LeptonProfileBoundedQ[yU_,yD_,yUMinor_,yDMinor_,v_,\[Beta]_,threshold_]";
+
+(* Constraint 3 *)
 
 QuarkAMatrices::usage = "QuarkAMatrices[yU_, yD_, yUMinor_, yDMinor_, v_, \[Beta]_]";
 LeptonAMatrices::usage = "LeptonAMatrices[yN_, yE_, yNMinor_, yEMinor_, v_, \[Beta]_]";
@@ -70,6 +91,8 @@ UnitaryQ::usage = "UnitaryQ[mat_,thres_]";
 QuarkAMatricesUnitaryQ::usage = "QuarkAMatricesUnitaryQ[yU_,yD_,yUMinor_,yDMinor_,thres_, v_, \[Beta]_]";
 LeptonAMatricesUnitaryQ::usage = "LeptonAMatricesUnitaryQ[yN_,yE_,yNMinor_,yEMinor_,thres_, v_, \[Beta]_]";
 QuarkConstraintSummary::usage = "QuarkConstraintSummary[yU_, yD_, yUMinor_, yDMinor_]";
+
+(* Analytical profile and profile overlap functions *)
 
 FermionProfile::usage = "FermionProfile[c_?NumericQ, z_, zir_:10^8]";
 FermionProfileUVOverlap::usage = "FermionProfileUVOverlap[cL_?NumericQ, cR_?NumericQ, zir_:10^8]";
@@ -79,6 +102,8 @@ TurnLeft::usage = "TurnLeft[listPM_]";
 FermionProfileUVOverlapCM::usage = "FermionProfileUVOverlapCM[cP_?NumericQ, cM_?NumericQ, zir_:10^8]";
 FermionProfileBulkOverlapCM::usage = "FermionProfileBulkOverlapCM[cP_?NumericQ, cM_?NumericQ, zir_:10^8]";
 FermionAxionOverlap::usage = "FermionAxionOverlap[c_,\[CapitalDelta]_,zir_:10^8]";
+
+(* Plot Utilities *)
 
 FixedRange::usage = "FixedRange[min_, max_, length_]";
 ListMirror::usage = "ListMirror[list_]";
@@ -106,6 +131,19 @@ $DownMass = {0.0048 , 0.095, 4.18};
 $DownMassError = {0.0008, 0.005, 0.03};
 $LeptonMass = {0.00051099895000, 0.1056583755, 1.77686};
 $LeptonMassError = {0.00000000000015, 0.0000000023, 0.00012};
+
+
+(* Quark and lepton Yukawa at 10^10 GeV, tan \[Beta] = 3 
+	See running.nb for detail calculation
+*)
+
+
+$Yu = {3.29456*10^-6, 0.00165737, 0.497757};
+$YuError = {1.41*10^-9, 7.4*10^-7, 2.*10^-6};
+$Yd = {0.0000244146, 0.000486184, 0.0237974};
+$YdError = {5.*10^-10, 2.21*10^-7, 4.*10^-7};
+$Ye = {2.96535*10^-6, 0.000624451, 0.0106073};
+$YeError = {3.*10^-11, 3.*10^-9, 1.*10^-7};
 
 
 (* Wolfenstefan parameters for CKM *)
@@ -188,12 +226,41 @@ LeptonEffMass[yN_, yE_, yNMinor_, yEMinor_, v_:246, \[Beta]_:ArcTan[3]]:= <|
 |>;
 
 
+QuarkEffYukawa[yU_, yD_, yUMinor_, yDMinor_]:= <|
+"u"-> $Yu[[1]] Norm[yUMinor[[1,1]]]/Norm[Det[yU]],
+"c"-> $Yu[[2]] Norm[yU[[3,3]]]/Norm[yUMinor[[1,1]]],
+"t"-> $Yu[[3]]/Norm[yU[[3,3]]],
+"d"-> $Yd[[1]] Norm[yDMinor[[1,1]]]/Norm[Det[yD]],
+"s"-> $Yd[[2]] Norm[yD[[3,3]]]/Norm[yDMinor[[1,1]]],
+"b"-> $Yd[[3]]/Norm[yD[[3,3]]]
+|>;
+
+
+LeptonEffYukawa[yN_, yE_, yNMinor_, yEMinor_]:= <|
+"e"-> $Ye[[1]]Norm[yEMinor[[1,1]]]/Norm[Det[yE]],
+"mu"-> $Ye[[2]] Norm[yE[[3,3]]]/Norm[yEMinor[[1,1]]],
+"tau"-> $Ye[[3]]/Norm[yE[[3,3]]]
+|>;
+
+
+(* Old Boolean constraint 2 using QuarkEffMass[] *)
+(* 
 QuarkProfileBoundedQ[yU_, yD_, yUMinor_, yDMinor_, v_:246, \[Beta]_:ArcTan[3], threshold_:0.95]:= 
 	AllTrue[ Values[QuarkEffMass[yU, yD, yUMinor, yDMinor, v, \[Beta]]], (#<threshold)& ];
+	*)
 
 
+(* Old Boolean constraint 2 using LeptonEffMass[] *)
+(*
 LeptonProfileBoundedQ[yN_, yE_, yNMinor_, yEMinor_, v_:246, \[Beta]_:ArcTan[3], threshold_:0.95]:= 
 	AllTrue[ Values[LeptonEffMass[yN, yE, yNMinor, yEMinor, v, \[Beta]]], (#<threshold)& ];
+	*)
+
+
+QuarkProfileBoundedQ[yU_, yD_, yUMinor_, yDMinor_, threshold_:0.95]:= 
+	AllTrue[ Values[QuarkEffYukawa[yU, yD, yUMinor, yDMinor]], (#<threshold)& ];
+LeptonProfileBoundedQ[yN_, yE_, yNMinor_, yEMinor_, threshold_:0.95]:= 
+	AllTrue[ Values[LeptonEffYukawa[yN, yE, yNMinor, yEMinor]], (#<threshold)& ];
 
 
 (* Constraint 3 *)
@@ -205,8 +272,8 @@ fQ = {
 		1, 
 		Norm[yD[[2,3]]/yD[[3,3]]-yU[[2,3]]/yU[[3,3]]]/($CkmA $CkmLambda^2)
 	};
-fu = (QuarkEffMass[yU, yD, yUMinor, yDMinor, v, \[Beta]][#]&/@{"u","c","t"})/fQ;
-fd = (QuarkEffMass[yU, yD, yUMinor, yDMinor, v, \[Beta]][#]&/@{"d","s","b"})/fQ;
+fu = (QuarkEffYukawa[yU, yD, yUMinor, yDMinor][#]&/@{"u","c","t"})/fQ;
+fd = (QuarkEffYukawa[yU, yD, yUMinor, yDMinor][#]&/@{"d","s","b"})/fQ;
 phaseU = ({
  {E^(-I(Arg[Det[yU]]-Arg[yUMinor[[1,1]]])), 0, 0},
  {0, E^(-I(Arg[yUMinor[[1,1]]]- Arg[yU[[3,3]]])), 0},
@@ -279,7 +346,7 @@ fl = {
 		1, 
 		Norm[yE[[2,3]]/yE[[3,3]]-yN[[2,3]]/yN[[3,3]]]/($PmnsA[[ordering]] $PmnsLambda[[ordering]]^2)
 	};
-fe = (LeptonEffMass[yN, yE, yNMinor, yEMinor, v, \[Beta]][#]&/@{"e","mu","tau"}) / fl;
+fe = (LeptonEffYukawa[yN, yE, yNMinor, yEMinor][#]&/@{"e","mu","tau"}) / fl;
 phaseE = ({
  {E^(-I(Arg[Det[yE]]-Arg[yEMinor[[1,1]]])), 0, 0},
  {0, E^(-I(Arg[yEMinor[[1,1]]]- Arg[yE[[3,3]]])), 0},
@@ -340,7 +407,7 @@ QuarkConstraintSummary[yU_, yD_, yUMinor_, yDMinor_]:= Module[{AdR},
 	Print["Constraint 2 result for quark sector"];
 	Print["\!\(\*SubscriptBox[\(Y\), \(u\)]\) = ",MatrixForm[yU]];
 	Print["\!\(\*SubscriptBox[\(Y\), \(d\)]\) = ",MatrixForm[yD]];
-	Print["The resulted effective quark masses ", QuarkEffMass[yU,yD,yUMinor,yDMinor]];
+	Print["The resulted effective quark masses ", QuarkEffYukawa[yU,yD,yUMinor,yDMinor]];
 	Print["QuarkProfileBoundedQ[] returns ",QuarkProfileBoundedQ[yU,yD,yUMinor,yDMinor]];
 	Print["Constraint 3 result for quark sector"];
 	Print["\!\(\*SubscriptBox[\(Y\), \(u\)]\) = ",MatrixForm[yU]];
@@ -383,7 +450,9 @@ TurnLeft[listPM_]:=Module[{cM=Transpose[listPM][[1]], cP=Transpose[listPM][[2]]}
 ];
 
 
-(* Axion-fermion-fermion overlap integral (non-flat part) *)
+(* Axion-fermion-fermion overlap integral (non-flat part) 
+	c either cL or -cR
+*)
 
 
 FermionAxionOverlap[c_,\[CapitalDelta]_,zir_:10^8]:=(1-2c)/(zir^(1-2c) - 1) 1/(4\[CapitalDelta](\[CapitalDelta]-1)) ((zir^(1-2 c)-zir^(-2 \[CapitalDelta]))/(1-2 c+2 \[CapitalDelta])+\[CapitalDelta] (1/zir^2-zir^(1-2 c))/(3-2 c));
