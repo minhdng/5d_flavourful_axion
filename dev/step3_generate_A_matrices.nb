@@ -1,0 +1,260 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 12.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      9370,        252]
+NotebookOptionsPosition[      7671,        219]
+NotebookOutlinePosition[      8012,        234]
+CellTagsIndexPosition[      7969,        231]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Generate A matrices", "Section",
+ CellChangeTimes->{{3.81526427195457*^9, 
+  3.815264290388817*^9}},ExpressionUUID->"fe3f57d9-1d23-4056-a79b-\
+eb05fabc0180"],
+
+Cell[BoxData[
+ RowBox[{"Clear", "[", "\"\<Global`*\>\"", "]"}]], "Input",
+ CellChangeTimes->{{3.8152642811552753`*^9, 
+  3.8152642976268153`*^9}},ExpressionUUID->"d4ce251c-afd2-4421-8793-\
+9bc469d80a63"],
+
+Cell[BoxData[
+ RowBox[{"SetDirectory", "[", 
+  RowBox[{
+   RowBox[{"NotebookDirectory", "[", "]"}], "~", "StringJoin", "~", 
+   "\"\<..\>\""}], "]"}]], "Input",
+ CellChangeTimes->{
+  3.8152652383464003`*^9},ExpressionUUID->"96241cb7-a0f9-4d37-9586-\
+fda1ea553c16"],
+
+Cell[BoxData[
+ RowBox[{"<<", "\"\<WarpFlavourAxion`\>\""}]], "Input",ExpressionUUID->"09bb0b39-9354-4095-aaaa-15890d7c566b"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"quarkData", " ", "=", " ", 
+   RowBox[{"<<", "\"\<output/yukawa_quark.m\>\""}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", "\"\<Number of Yu Yd 3x3 matrix pairs\>\"", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Dimensions", "[", "quarkData", "]"}]}], "Input",
+ CellChangeTimes->{{3.8152643210871887`*^9, 
+  3.8152643221531887`*^9}},ExpressionUUID->"634937da-3afa-4401-bafe-\
+ee5e2e09ec52"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"leptonDataAll", " ", "=", " ", 
+   RowBox[{"<<", "\"\<output/yukawa_lepton.m\>\""}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"leptonData", " ", "=", 
+   RowBox[{"leptonDataAll", "[", 
+    RowBox[{"[", 
+     RowBox[{"All", ",", 
+      RowBox[{"1", ";;", "2"}]}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", 
+  "\"\<Number of Yn Ye 3x3 matrix pairs (normal hierarchy)\>\"", 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Dimensions", "[", "leptonData", "]"}]}], "Input",ExpressionUUID->\
+"3c0b018e-ce30-4d92-835b-b1c68b18c7f5"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"quarkAData", " ", "=", " ", 
+    RowBox[{"Table", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"yu", " ", "=", " ", 
+        RowBox[{"quarkData", "[", 
+         RowBox[{"[", 
+          RowBox[{"i", ",", " ", "1"}], "]"}], "]"}]}], ";", " ", 
+       RowBox[{"yd", " ", "=", " ", 
+        RowBox[{"quarkData", "[", 
+         RowBox[{"[", 
+          RowBox[{"i", ",", "2"}], "]"}], "]"}]}], ";", 
+       RowBox[{"myu", "=", 
+        RowBox[{"Minors", "[", "yu", "]"}]}], ";", 
+       RowBox[{"myd", "=", 
+        RowBox[{"Minors", "[", "yd", "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"QuarkAMatrices", "[", 
+        RowBox[{"yu", ",", " ", "yd", ",", " ", "myu", ",", " ", "myd"}], 
+        "]"}]}], "\[IndentingNewLine]", ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", 
+        RowBox[{"Length", "[", "quarkData", "]"}]}], "}"}]}], 
+     "\[IndentingNewLine]", "]"}]}], ";"}], "//", 
+  "AbsoluteTiming"}], "\[IndentingNewLine]", 
+ RowBox[{"Clear", "[", 
+  RowBox[{"yu", ",", "yd", ",", "myu", ",", "myd"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Dimensions", "[", "quarkAData", "]"}]}], "Input",
+ CellLabel->"In[30]:=",ExpressionUUID->"2389e58e-c2c6-42f6-9811-57c85de60eca"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.9271328`", ",", "Null"}], "}"}]], "Output",
+ CellChangeTimes->{3.8152647323028774`*^9},
+ CellLabel->"Out[30]=",ExpressionUUID->"a9363694-7f45-4942-8b2b-c261bd199996"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"1321", ",", "4", ",", "3", ",", "3"}], "}"}]], "Output",
+ CellChangeTimes->{3.815264732309869*^9},
+ CellLabel->"Out[32]=",ExpressionUUID->"afaad06e-5732-4a11-a3b7-63d6d9665b47"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Save", " ", "final", " ", "Yukawa", " ", "pairs", " ", "to", " ", 
+    "\"\<output/\>\""}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"Export", "[", 
+     RowBox[{"\"\<output/A_quark.m\>\"", ",", " ", "quarkAData"}], "]"}], 
+    ";"}], " ", "*)"}]}]], "Input",
+ CellChangeTimes->{{3.8152650711005683`*^9, 
+  3.815265072647519*^9}},ExpressionUUID->"8ef9dfc2-2800-4f26-a81f-\
+5295946964d8"],
+
+Cell["Note that we only consider the charged leptons", "Text",
+ CellChangeTimes->{{3.8152648777954063`*^9, 
+  3.8152648851664057`*^9}},ExpressionUUID->"ebd7846d-d6d5-4026-a6f7-\
+548c2c6b2fde"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"leptonAData", " ", "=", " ", 
+    RowBox[{"Table", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"yn", " ", "=", " ", 
+        RowBox[{"leptonData", "[", 
+         RowBox[{"[", 
+          RowBox[{"i", ",", " ", "1"}], "]"}], "]"}]}], ";", " ", 
+       RowBox[{"ye", " ", "=", " ", 
+        RowBox[{"leptonData", "[", 
+         RowBox[{"[", 
+          RowBox[{"i", ",", "2"}], "]"}], "]"}]}], ";", 
+       RowBox[{"myn", "=", 
+        RowBox[{"Minors", "[", "yn", "]"}]}], ";", 
+       RowBox[{"mye", "=", 
+        RowBox[{"Minors", "[", "ye", "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"LeptonAMatrices", "[", 
+        RowBox[{"yn", ",", " ", "ye", ",", " ", "myn", ",", " ", "mye", ",", 
+         RowBox[{"leptonDataAll", "[", 
+          RowBox[{"[", 
+           RowBox[{"i", ",", "3"}], "]"}], "]"}], ",", 
+         RowBox[{"leptonDataAll", "[", 
+          RowBox[{"[", 
+           RowBox[{"i", ",", "4"}], "]"}], "]"}]}], "]"}]}], 
+      "\[IndentingNewLine]", ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", 
+        RowBox[{"Length", "[", "leptonData", "]"}]}], "}"}]}], 
+     "\[IndentingNewLine]", "]"}]}], ";"}], "//", 
+  "AbsoluteTiming"}], "\[IndentingNewLine]", 
+ RowBox[{"Clear", "[", 
+  RowBox[{"yn", ",", "ye", ",", "myn", ",", "mye"}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Dimensions", "[", "leptonAData", "]"}]}], "Input",
+ CellChangeTimes->{{3.8152647448263273`*^9, 3.815264784370326*^9}, {
+  3.815264830974612*^9, 3.8152648539494066`*^9}, {3.8152648913494043`*^9, 
+  3.8152649311374683`*^9}},
+ CellLabel->"In[43]:=",ExpressionUUID->"9736edda-8eb1-4156-b986-9c18c5886277"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"0.3587245`", ",", "Null"}], "}"}]], "Output",
+ CellChangeTimes->{3.815264768271327*^9, 3.815264854511405*^9, 
+  3.815264901381942*^9, 3.8152649366124697`*^9},
+ CellLabel->"Out[43]=",ExpressionUUID->"aa4dc699-8f07-4c12-865f-8124f8bb79d5"],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{"1030", ",", "2", ",", "3", ",", "3"}], "}"}]], "Output",
+ CellChangeTimes->{3.815264768271327*^9, 3.815264854511405*^9, 
+  3.815264901381942*^9, 3.8152649366164694`*^9},
+ CellLabel->"Out[45]=",ExpressionUUID->"1023977e-f204-4dc2-82ed-5b89d1e5da92"]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", " ", 
+   RowBox[{
+   "Save", " ", "final", " ", "Yukawa", " ", "pairs", " ", "to", " ", 
+    "\"\<output/\>\""}], " ", "*)"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", " ", 
+   RowBox[{
+    RowBox[{"Export", "[", 
+     RowBox[{"\"\<output/A_lepton.m\>\"", ",", " ", "leptonAData"}], "]"}], 
+    ";"}], " ", "*)"}]}]], "Input",
+ CellChangeTimes->{{3.8152649897361155`*^9, 3.815265033625518*^9}, {
+  3.8152650751756*^9, 
+  3.8152650767136745`*^9}},ExpressionUUID->"c54d28db-3d68-4c6b-bde7-\
+ae833f0b59a4"]
+}, Open  ]]
+},
+WindowSize->{793, 872},
+WindowMargins->{{6, Automatic}, {42, Automatic}},
+FrontEndVersion->"12.0 for Microsoft Windows (64-bit) (April 8, 2019)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 163, 3, 67, "Section",ExpressionUUID->"fe3f57d9-1d23-4056-a79b-eb05fabc0180"],
+Cell[746, 27, 203, 4, 28, "Input",ExpressionUUID->"d4ce251c-afd2-4421-8793-9bc469d80a63"],
+Cell[952, 33, 264, 7, 28, "Input",ExpressionUUID->"96241cb7-a0f9-4d37-9586-fda1ea553c16"],
+Cell[1219, 42, 124, 1, 28, "Input",ExpressionUUID->"09bb0b39-9354-4095-aaaa-15890d7c566b"],
+Cell[1346, 45, 441, 10, 67, "Input",ExpressionUUID->"634937da-3afa-4401-bafe-ee5e2e09ec52"],
+Cell[1790, 57, 603, 16, 86, "Input",ExpressionUUID->"3c0b018e-ce30-4d92-835b-b1c68b18c7f5"],
+Cell[CellGroupData[{
+Cell[2418, 77, 1268, 31, 181, "Input",ExpressionUUID->"2389e58e-c2c6-42f6-9811-57c85de60eca"],
+Cell[3689, 110, 208, 4, 32, "Output",ExpressionUUID->"a9363694-7f45-4942-8b2b-c261bd199996"],
+Cell[3900, 116, 217, 4, 32, "Output",ExpressionUUID->"afaad06e-5732-4a11-a3b7-63d6d9665b47"]
+}, Open  ]],
+Cell[4132, 123, 491, 13, 48, "Input",ExpressionUUID->"8ef9dfc2-2800-4f26-a81f-5295946964d8"],
+Cell[4626, 138, 192, 3, 34, "Text",ExpressionUUID->"ebd7846d-d6d5-4026-a6f7-548c2c6b2fde"],
+Cell[CellGroupData[{
+Cell[4843, 145, 1684, 40, 181, "Input",ExpressionUUID->"9736edda-8eb1-4156-b986-9c18c5886277"],
+Cell[6530, 187, 277, 5, 32, "Output",ExpressionUUID->"aa4dc699-8f07-4c12-865f-8124f8bb79d5"],
+Cell[6810, 194, 288, 5, 32, "Output",ExpressionUUID->"1023977e-f204-4dc2-82ed-5b89d1e5da92"]
+}, Open  ]],
+Cell[7113, 202, 542, 14, 48, "Input",ExpressionUUID->"c54d28db-3d68-4c6b-bde7-ae833f0b59a4"]
+}, Open  ]]
+}
+]
+*)
+
